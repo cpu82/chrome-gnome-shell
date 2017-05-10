@@ -1,0 +1,6 @@
+Provides integration with GNOME Shell extensions repository for Chromium
+and Firefox.
+
+This package provides the connector that talks with the browser extension.
+
+WWW: https://github.com/GNOME/chrome-gnome-shell
