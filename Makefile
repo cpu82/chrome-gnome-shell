@@ -19,7 +19,7 @@ RUN_DEPENDS=	dbus-daemon:devel/dbus \
 		gnome-shell>=0:x11/gnome-shell \
 		${PYTHON_PKGNAMEPREFIX}requests>=2.0:www/py-requests
 
-USES=		cmake gettext gnome localbase pkgconfig python:2
+USES=		cmake gnome localbase pkgconfig python:2
 USE_GNOME=	pygobject3
 CMAKE_ARGS=	-DBUILD_EXTENSION=OFF
 INSTALL_TARGET=	install
