@@ -3,8 +3,8 @@
 
 PORTNAME=	chrome-gnome-shell
 PORTVERSION=	9
-DISTVERSIONPREFIX=	v
 CATEGORIES=	deskutils gnome
+MASTER_SITES=	GNOME
 DIST_SUBDIR=	gnome3
 
 MAINTAINER=	gnome@FreeBSD.org
@@ -19,14 +19,11 @@ RUN_DEPENDS=	dbus-daemon:devel/dbus \
 		gnome-shell>=0:x11/gnome-shell \
 		${PYTHON_PKGNAMEPREFIX}requests>=2.0:www/py-requests
 
-USES=		cmake gnome localbase pkgconfig python:2
+USES=		cmake localbase pkgconfig python:2 tar:xz
 USE_GNOME=	pygobject3
 CMAKE_ARGS=	-DBUILD_EXTENSION=OFF
 INSTALL_TARGET=	install
 INSTALLS_ICONS=	yes
-
-USE_GITHUB=	yes
-GH_ACCOUNT=	GNOME
 
 PKGMESSAGE=	../gnome-shell-extra-extensions/pkg-message.slaves
 
