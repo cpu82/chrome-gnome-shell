@@ -1,20 +1,20 @@
---- CMakeLists.txt.orig	2017-05-10 14:01:02 UTC
+--- CMakeLists.txt.orig	2017-04-16 18:05:47 UTC
 +++ CMakeLists.txt
-@@ -185,13 +185,13 @@ if(BUILD_CONNECTOR)
+@@ -185,13 +185,17 @@ if(BUILD_CONNECTOR)
  					install ${DISTUTILS_EXTRA_ARGS}
  						--root \"\${DESTDIR}\"
  						--prefix \"${CMAKE_INSTALL_PREFIX}\")")
--	install(FILES "${CMAKE_BINARY_DIR}/org.gnome.chrome_gnome_shell.json" DESTINATION "/etc/chromium/native-messaging-hosts/")
--	install(FILES "${CMAKE_BINARY_DIR}/org.gnome.chrome_gnome_shell.json" DESTINATION "/etc/opt/chrome/native-messaging-hosts/")
-+	# install(FILES "${CMAKE_BINARY_DIR}/org.gnome.chrome_gnome_shell.json" DESTINATION "/etc/chromium/native-messaging-hosts/")
-+	# install(FILES "${CMAKE_BINARY_DIR}/org.gnome.chrome_gnome_shell.json" DESTINATION "/etc/opt/chrome/native-messaging-hosts/")
++	if(NOT CMAKE_SYSTEM_NAME MATCHES "DragonFly.*|FreeBSD")
+ 	install(FILES "${CMAKE_BINARY_DIR}/org.gnome.chrome_gnome_shell.json" DESTINATION "/etc/chromium/native-messaging-hosts/")
+ 	install(FILES "${CMAKE_BINARY_DIR}/org.gnome.chrome_gnome_shell.json" DESTINATION "/etc/opt/chrome/native-messaging-hosts/")
++	endif(NOT CMAKE_SYSTEM_NAME MATCHES "DragonFly.*|FreeBSD")
  	install(FILES "${CMAKE_BINARY_DIR}/org.gnome.chrome_gnome_shell.firefox.json"
  			DESTINATION "${CMAKE_INSTALL_LIBDIR}/mozilla/native-messaging-hosts/"
  			RENAME "org.gnome.chrome_gnome_shell.json")
--	install(FILES "${CMAKE_BINARY_DIR}/chrome-gnome-shell.json" DESTINATION "/etc/opt/chrome/policies/managed/")
--	install(FILES "${CMAKE_BINARY_DIR}/chrome-gnome-shell.json" DESTINATION "/etc/chromium/policies/managed/")
-+	# install(FILES "${CMAKE_BINARY_DIR}/chrome-gnome-shell.json" DESTINATION "/etc/opt/chrome/policies/managed/")
-+	# install(FILES "${CMAKE_BINARY_DIR}/chrome-gnome-shell.json" DESTINATION "/etc/chromium/policies/managed/")
++ 	if(NOT CMAKE_SYSTEM_NAME MATCHES "DragonFly.*|FreeBSD")
+ 	install(FILES "${CMAKE_BINARY_DIR}/chrome-gnome-shell.json" DESTINATION "/etc/opt/chrome/policies/managed/")
+ 	install(FILES "${CMAKE_BINARY_DIR}/chrome-gnome-shell.json" DESTINATION "/etc/chromium/policies/managed/")
++	endif(NOT CMAKE_SYSTEM_NAME MATCHES "DragonFly.*|FreeBSD")
  
  	install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/connector/org.gnome.ChromeGnomeShell.desktop" DESTINATION "${CMAKE_INSTALL_DATADIR}/applications/")
  	install(FILES "${CMAKE_BINARY_DIR}/org.gnome.ChromeGnomeShell.service" DESTINATION "${CMAKE_INSTALL_DATADIR}/dbus-1/services/")
