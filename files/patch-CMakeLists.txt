@@ -1,20 +1,51 @@
---- CMakeLists.txt.orig	2017-04-16 18:05:47 UTC
+--- CMakeLists.txt.orig	2017-09-04 12:06:08 UTC
 +++ CMakeLists.txt
-@@ -185,13 +185,17 @@ if(BUILD_CONNECTOR)
+@@ -159,8 +159,6 @@ if(BUILD_CONNECTOR)
+ 			"${CMAKE_BINARY_DIR}/")
+ 	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/connector/org.gnome.ChromeGnomeShell.service.in"
+ 			"${CMAKE_BINARY_DIR}/org.gnome.ChromeGnomeShell.service")
+-	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/policies/chrome-gnome-shell.json"
+-			"${CMAKE_BINARY_DIR}/")
+ 
+ 	add_custom_target(firefox-native-manifest ALL
+ 			COMMAND "${JQ_EXECUTABLE}" -s "'add|del(.allowed_origins)'"
+@@ -185,13 +183,20 @@ if(BUILD_CONNECTOR)
  					install ${DISTUTILS_EXTRA_ARGS}
  						--root \"\${DESTDIR}\"
  						--prefix \"${CMAKE_INSTALL_PREFIX}\")")
+-	install(FILES "${CMAKE_BINARY_DIR}/org.gnome.chrome_gnome_shell.json" DESTINATION "/etc/chromium/native-messaging-hosts/")
+-	install(FILES "${CMAKE_BINARY_DIR}/org.gnome.chrome_gnome_shell.json" DESTINATION "/etc/opt/chrome/native-messaging-hosts/")
++
 +	if(NOT CMAKE_SYSTEM_NAME MATCHES "DragonFly.*|FreeBSD")
- 	install(FILES "${CMAKE_BINARY_DIR}/org.gnome.chrome_gnome_shell.json" DESTINATION "/etc/chromium/native-messaging-hosts/")
- 	install(FILES "${CMAKE_BINARY_DIR}/org.gnome.chrome_gnome_shell.json" DESTINATION "/etc/opt/chrome/native-messaging-hosts/")
++		install(FILES "${CMAKE_BINARY_DIR}/org.gnome.chrome_gnome_shell.json" DESTINATION "/etc/chromium/native-messaging-hosts/")
++		install(FILES "${CMAKE_BINARY_DIR}/org.gnome.chrome_gnome_shell.json" DESTINATION "/etc/opt/chrome/native-messaging-hosts/")
++	else(NOT CMAKE_SYSTEM_NAME MATCHES "DragonFly.*|FreeBSD")
++		# FreeBSD uses patch that forces Chromium to look into undocumented
++		# "/usr/local/etc/chrome/native-messaging-hosts" folder for native messaging host manifest.
++		# https://github.com/freebsd/freebsd-ports/blob/master/www/chromium/files/patch-chrome_common_chrome__paths.cc
++		install(FILES "${CMAKE_BINARY_DIR}/org.gnome.chrome_gnome_shell.json" DESTINATION "/usr/local/etc/chrome/native-messaging-hosts/")
 +	endif(NOT CMAKE_SYSTEM_NAME MATCHES "DragonFly.*|FreeBSD")
++
  	install(FILES "${CMAKE_BINARY_DIR}/org.gnome.chrome_gnome_shell.firefox.json"
  			DESTINATION "${CMAKE_INSTALL_LIBDIR}/mozilla/native-messaging-hosts/"
  			RENAME "org.gnome.chrome_gnome_shell.json")
-+ 	if(NOT CMAKE_SYSTEM_NAME MATCHES "DragonFly.*|FreeBSD")
- 	install(FILES "${CMAKE_BINARY_DIR}/chrome-gnome-shell.json" DESTINATION "/etc/opt/chrome/policies/managed/")
- 	install(FILES "${CMAKE_BINARY_DIR}/chrome-gnome-shell.json" DESTINATION "/etc/chromium/policies/managed/")
-+	endif(NOT CMAKE_SYSTEM_NAME MATCHES "DragonFly.*|FreeBSD")
+-	install(FILES "${CMAKE_BINARY_DIR}/chrome-gnome-shell.json" DESTINATION "/etc/opt/chrome/policies/managed/")
+-	install(FILES "${CMAKE_BINARY_DIR}/chrome-gnome-shell.json" DESTINATION "/etc/chromium/policies/managed/")
  
  	install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/connector/org.gnome.ChromeGnomeShell.desktop" DESTINATION "${CMAKE_INSTALL_DATADIR}/applications/")
  	install(FILES "${CMAKE_BINARY_DIR}/org.gnome.ChromeGnomeShell.service" DESTINATION "${CMAKE_INSTALL_DATADIR}/dbus-1/services/")
+@@ -205,14 +210,6 @@ if(BUILD_CONNECTOR)
+ 	install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/extension/icons/GnomeLogo-128.png"
+ 		DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/gnome/128x128/apps/"
+ 		RENAME org.gnome.ChromeGnomeShell.png)
+-
+-	# There is wrong patch in FreeBSD that forces Chromium to look into
+-	# /usr/local/etc/chrome/native-messaging-hosts for native messaging host manifest.
+-	# https://svn0.us-east.freebsd.org/ports/head/www/chromium/files/patch-chrome_common_chrome__paths.cc
+-	if(CMAKE_SYSTEM_NAME MATCHES "DragonFly.*|FreeBSD")
+-		install(FILES "${CMAKE_BINARY_DIR}/org.gnome.chrome_gnome_shell.json" DESTINATION "/usr/local/etc/chrome/native-messaging-hosts/")
+-		install(FILES "${CMAKE_BINARY_DIR}/chrome-gnome-shell.json" DESTINATION "/usr/local/etc/chrome/policies/managed/")
+-	endif(CMAKE_SYSTEM_NAME MATCHES "DragonFly.*|FreeBSD")
+ endif(BUILD_CONNECTOR)
+ 
+ if(BUILD_SOURCE_PACKAGE)

@@ -25,6 +25,8 @@ CMAKE_ARGS=	-DBUILD_EXTENSION=OFF
 INSTALL_TARGET=	install
 INSTALLS_ICONS=	yes
 
+NO_ARCH=	yes
+
 PKGMESSAGE=	../gnome-shell-extra-extensions/pkg-message.slaves
 
 .include <bsd.port.mk>
